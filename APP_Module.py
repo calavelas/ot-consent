@@ -4,12 +4,11 @@ import pprint
 import json
 import os
 
-#CIMB
+#Get credential from enviroment variable
 clientId = os.environ.get("MSC_clientId")
 clientSecret = os.environ.get("MSC_clientSecret")
 SITE_URL = 'https://app-apac.onetrust.com'
 
-print(clientId)
 #CSV File Enviroment Variable
 File_Name = 'msc_apidemo_purpose.csv'
 
