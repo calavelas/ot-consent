@@ -1,0 +1,4 @@
+﻿Name,Description,Organizations,DefaultLanguage,ConsentLifeSpan,Language1,DefaultLanguage1,NameLanguage1,DescriptionLanguage1,Language2,DefaultLanguage2,NameLanguage2,DescriptionLanguage2
+API DEMO P1 : Usecase A - MSC,ให้ความยินยอมในการทดสอบ API - Usecase A - MSC,MSC_LAB,th,0,th,TRUE,API DEMO P1 : Usecase A - MSC,ให้ความยินยอมในการทดสอบ API : Usecase A - MSC,en-us,FALSE,API DEMO P1 : Usecase A - MSC,Consent for testing API : Usecase A - MSC
+API DEMO P2 : Usecase B - SIG,ให้ความยินยอมในการทดสอบ API - Usecase B - SIG,MSC_LAB,th,0,th,TRUE,API DEMO P2 : Usecase B - SIG,ให้ความยินยอมในการทดสอบ API : Usecase B - SIG,en-us,FALSE,API DEMO P2 : Usecase B - SIG,Consent for testing API : Usecase B - SIG
+API DEMO P3 : Usecase C - BIG,ให้ความยินยอมในการทดสอบ API - Usecase C- BIG,MSC_LAB,th,0,th,TRUE,API DEMO P3 : Usecase C - BIG,ให้ความยินยอมในการทดสอบ API : Usecase C- BIG,en-us,FALSE,API DEMO P3 : Usecase C - BIG,Consent for testing API : Usecase C - BIG
