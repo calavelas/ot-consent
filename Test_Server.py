@@ -1,7 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from APP_Module import Get_Token
-from API_Variable import *
-
 
 posts = [{'ConsentLifeSpan': '0',
   'DefaultLanguage': 'th',
@@ -72,11 +70,17 @@ posts = [{'ConsentLifeSpan': '0',
   'Version': 1,
   'purposeId': 'c3287833-a815-429d-8655-c5d204fe9c56'}]
 
+class credential_form(Form):
+    name = StringField('name')
+    submit1 = SubmitField('submit')
+
 app = Flask(__name__)
 @app.route('/')
 def index():
-    return render_template('index.html', title='OneTrust Consent' , posts=posts)
+  credential_form = credential_form()
+  return render_template('index.html', title='OneTrust Consent' , posts=posts , form=credential_form)
 
 if __name__ == '__main__':
     app.run(debug=True)
 
+ 
