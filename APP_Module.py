@@ -3,10 +3,18 @@ import requests
 import pprint
 import json
 import os
+import datetime
+
+now = datetime.datetime.now()
+
+# #Get credential from enviroment variable
+# clientId = os.environ.get("MSC_clientId")
+# clientSecret = os.environ.get("MSC_clientSecret")
+# SITE_URL = 'https://app-apac.onetrust.com'
 
 #Get credential from enviroment variable
-clientId = os.environ.get("MSC_clientId")
-clientSecret = os.environ.get("MSC_clientSecret")
+clientId = '484eda11530b48ad958f1ede17604ecd'
+clientSecret = 'nbW7EPwWaa91Bfa0hZeMYhu3Gan3paqO'
 SITE_URL = 'https://app-apac.onetrust.com'
 
 #CSV File Enviroment Variable
@@ -71,11 +79,14 @@ def Parse_CSV():
                     ]
                 }
             )
+    pprint.pprint('========== Parsed Result ==========')
+    for item in CSV_Purpose:
+        print(str(now)+' : '+'Parsed! | Purpose Name : '+item['Name']+ ' |' + ' Organizations : '+item['Organizations'][0])
     return CSV_Purpose
 
 def Create_Purpose(CSV):
     # Call API to create purpose from CSV file
-    respond_list = []
+    result = []
     accessToken = Get_Token()
     headers = {
         'Content-Type': 'application/json',
@@ -86,8 +97,15 @@ def Create_Purpose(CSV):
         payload = items
         respond = requests.post(request_url, headers=headers, data=json.dumps(payload))
         respond_json = respond.json()
-        respond_list.append(respond_json)
-    return respond_list
+        result.append(respond_json)
+    pprint.pprint('========== Create Result ==========')
+    for item in result:
+        if 'message' in item:
+            print(str(now)+' : '+item['message'])
+        else:
+            print(str(now)+' : '+'Created! | Purpose Name : '+item['Label']+ ' |' + ' ID : '+item['Id']+ ' |' ' Status : '+item['Status'])
+    return result
+
 
 def Update_CSV_PurposeID(Parsed_CSV):
     # Get recently created consent id from API and Update to the purpose
@@ -103,7 +121,7 @@ def Update_CSV_PurposeID(Parsed_CSV):
 
 def API_Update_Purpose(Updated_CSV):
     # Update recently created purpose with API from Updated CSV (with ID)
-    respond_list = []
+    result = []
     accessToken = Get_Token()
     headers = {
         'Content-Type': 'application/json',
@@ -115,26 +133,23 @@ def API_Update_Purpose(Updated_CSV):
         payload = items
         respond = requests.put(request_url, headers=headers, data=json.dumps(payload)) #Data have to be sent in JSON format
         respond_json = respond.json()
-        respond_list.append(respond_json)
-    return respond_list
+        result.append(respond_json)
+    pprint.pprint('========== Updated Result ==========')
+    for item in result:
+        if 'message' in item:
+            print(str(now)+' : '+item['message'])
+        else:
+            print(str(now)+' : '+'Updated! | Purpose Name : '+item['Label']+ ' |' + ' ID : '+item['Id']+ ' |' ' Status : '+item['Status'])
+    return result
 
-def Write_Update_CSV(CSV):
-    pass
+def Write_CSV(Updated_CSV):
+    with open('csv/'+'Updated_'+File_Name, 'w',encoding="utf-8") as f:
+        w = csv.DictWriter(f, Updated_CSV[0].keys())
+        w.writeheader()
+        for item in Updated_CSV:
+            w.writerow(item)
+    print(str(now)+' : '+'Updated CSV Complete!!')
 
-if __name__ == "__main__":
-    CSV = Parse_CSV() #Parse CSV file with function
-    pprint.pprint('========== Parse CSV ==========')
-    pprint.pprint('Name | Organization')
-    for item in CSV:
-        print(item['Name']+' | '+ item['Organizations'][0])
-    Create_Result = Create_Purpose(CSV)
-    pprint.pprint('========== Create Result ==========')
-    pprint.pprint(Create_Result)
-    Updated_CSV = Update_CSV_PurposeID(CSV) #Add Purpose ID to recently create purpose
-    #pprint.pprint(Updated_CSV)
-    Update_Purpose_Result = API_Update_Purpose(Updated_CSV)
-    pprint.pprint('========== Update Result ==========')
-    pprint.pprint(Update_Purpose_Result)
 
 
 
