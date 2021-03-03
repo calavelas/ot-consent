@@ -4,21 +4,9 @@ import pprint
 import json
 import os
 import datetime
+from Setting import *
 
 now = datetime.datetime.now()
-
-# #Get credential from enviroment variable
-# clientId = os.environ.get("MSC_clientId")
-# clientSecret = os.environ.get("MSC_clientSecret")
-# SITE_URL = 'https://app-apac.onetrust.com'
-
-#Get credential from enviroment variable
-clientId = '484eda11530b48ad958f1ede17604ecd'
-clientSecret = 'nbW7EPwWaa91Bfa0hZeMYhu3Gan3paqO'
-SITE_URL = 'https://app-apac.onetrust.com'
-
-#CSV File Enviroment Variable
-File_Name = 'msc_apidemo_purpose.csv'
 
 def Get_Token():
     #Get token from clientId and Secret
