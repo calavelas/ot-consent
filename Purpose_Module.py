@@ -1,27 +1,15 @@
+#Lib
 import csv
 import requests
 import pprint
 import json
 import os
 import datetime
-from Setting import *
+import pprint
 
-def api_get_token():
-    #API Call
-    #Get token from client_id and Secret
-    now = datetime.datetime.now()
-    request_payload = {
-        'grant_type': 'client_credentials',
-        'client_id': client_id,
-        'client_secret': client_secret
-    }
-    request_url = f'{site_url}/api/access/v1/oauth/token'
-    respond = requests.post(request_url, params=request_payload)
-    respond_json = respond.json()
-    if 'error' in respond_json:
-            print(str(now)+' : Get Token Error | '+respond_json['error'] +' | ' +respond_json['error_description']) #Print Error Message
-    access_token = respond_json['access_token']
-    return(access_token)
+#Module
+from GetToken_Module import api_get_token
+from Setting import *
 
 def api_get_purpose_list():
     #API Call
@@ -40,22 +28,23 @@ def api_get_purpose_list():
     purpose_list = respond_json
     return purpose_list
 
-def parse_csv_purpose():
+def parse_csv_purpose(consent_csv_file):
     #Parse CSV File to build JSON format for API
     purpose_csv = []
     now = datetime.datetime.now()
-    with open(f'csv/consent_purpose/{consent_file_name}', mode='r') as csv_file:
+    with open(f'csv/consent_purpose/initial/{consent_csv_file}', mode='r') as csv_file:
         csv_dict = csv.DictReader(csv_file)
         for row in csv_dict:
             purpose_csv.append(
                 {
-                    "Name": row['\ufeffName'],
+                    "Name": row["\ufeffName"],
                     "DefaultLanguage": row['DefaultLanguage'],
                     "Description": row['Description'],
                     "ConsentLifeSpan": row['ConsentLifeSpan'],
                     "Organizations": [
                         row['Organizations']
                     ], #API Require this field as list
+
                     "Languages":[
                         {
                             'Language': row['Language1'],
@@ -76,6 +65,23 @@ def parse_csv_purpose():
     for item in purpose_csv:
         print(str(now)+' : '+'Parsed! | Purpose Name : '+item['Name']+ ' |' + ' Organizations : '+item['Organizations'][0])
     return purpose_csv
+
+def parse_updated_csv_purpose(updated_consent_csv_file):
+    #Parse CSV File to build JSON format for API
+    updated_purpose_csv = []
+    now = datetime.datetime.now()
+    with open(f'csv/consent_purpose/final_product/{updated_consent_csv_file}', mode='r') as csv_file:
+        csv_dict = csv.DictReader(csv_file)
+        for row in csv_dict:
+            item = {}
+            for key in row:
+                if key == 'Languages':
+                    a = row[key]
+                    item[key] = a
+                else:
+                    item[key] = row[key]
+        updated_purpose_csv.append(item)
+    return updated_purpose_csv
 
 def api_create_consent_purpose(purpose_csv):
     #API Call
@@ -100,10 +106,9 @@ def api_create_consent_purpose(purpose_csv):
         else:
             print(str(now)+' : '+'Created! | Purpose Name : '+item['Label']+ ' |' + ' ID : '+item['Id']+ ' |' ' Status : '+item['Status']) #Print Success Message + Items
 
-
 def update_csv_purpose(purpose_csv):
     # Get recently created consent id from API and Update to the purpose
-    purpose_list = api_get_purpose_list() #Get CSV List from API
+    purpose_list = api_get_purpose_list() #Get OT Purpose List from API
     for purpose in purpose_csv:
         for content in purpose_list['content']:
             if purpose['Name'] in content['versions'][0]['label']: #Match Purpose ID of recently created purpose to existing data
@@ -136,16 +141,20 @@ def api_update_consent_purpose(purpose_csv):
         else:
             print(str(now)+' : '+'Updated! | Purpose Name : '+item['Label']+ ' |' + ' ID : '+item['Id']+ ' |' ' Status : '+item['Status'])
 
-def write_csv_purpose(purpose_csv):
+def write_json_purpose(purpose_csv,consent_csv_file):
+    filename = consent_csv_file.replace('.csv','.json')
+    print(filename)
+    with open(f'csv/consent_purpose/final_product/json/updated_{filename}', mode='w', encoding="utf8") as txt_file:
+        purpose_json = json.dumps(purpose_csv, ensure_ascii=False)
+        print(purpose_json)
+        txt_file.write(purpose_json)
+
+def write_csv_purpose(purpose_csv,consent_csv_file):
     now = datetime.datetime.now()
-    with open('csv/consent_purpose/'+'updated_'+consent_file_name, 'w',encoding="utf-8") as csv_file:
+    with open(f'csv/consent_purpose/final_product/updated_{consent_csv_file}', mode='w', encoding="utf8") as csv_file:
         csv_dict = csv.DictWriter(csv_file, purpose_csv[0].keys())
         csv_dict.writeheader()
         for item in purpose_csv:
             csv_dict.writerow(item)
     print('Save to CSV File Result')
-    print(str(now)+' : '+f'Saved to CSV file Complete!, File Name >> updated_{consent_file_name}')
-
-
-
-
+    print(str(now)+' : '+f'Saved to CSV file Complete!, File Name >> updated_{consent_csv_file}')

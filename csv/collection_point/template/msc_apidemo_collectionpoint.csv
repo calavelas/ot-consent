@@ -1,0 +1,16 @@
+﻿Name,Description,Identifier,CollectionPointType,ConsentType,DataSubjectIdentifier,DataElements,Organizations,NotGiven,PurposeID,Language
+Test API 3,Test API Description,Email,API,,E-mail,"Name,
+Lastname,
+Mobile",bd8fa008-6797-483d-8270-d92e2a35820d,TRUE,"3be37080-329a-4854-9f11-807dca26f8e1,
+89f8505e-2c03-4f33-bd78-3925889d2cc1,
+2d515bbb-c8b9-443a-8981-2c2c4b4e60f7",th
+Test API 4,Test API Description,Email,API,,E-mail,"Name,
+Lastname,
+Mobile",bd8fa008-6797-483d-8270-d92e2a35820d,TRUE,"3be37080-329a-4854-9f11-807dca26f8e1,
+89f8505e-2c03-4f33-bd78-3925889d2cc1,
+2d515bbb-c8b9-443a-8981-2c2c4b4e60f7",th
+Test API 5,Test API Description,Email,API,,E-mail,"Name,
+Lastname,
+Mobile",bd8fa008-6797-483d-8270-d92e2a35820d,TRUE,"3be37080-329a-4854-9f11-807dca26f8e1,
+89f8505e-2c03-4f33-bd78-3925889d2cc1,
+2d515bbb-c8b9-443a-8981-2c2c4b4e60f7",th
